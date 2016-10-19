@@ -1,0 +1,61 @@
+#include <iostream>
+using namespace std;
+const int arr_size = 25;
+void fill_array(int arr_par[], int size, int& used);
+void sort_array(int arr_par[], int used);
+int min_value(const int arr_par[], int used_par, int start_index);
+void swap_index_values(int arr_par[], int index_start, int index_min);
+int main()
+{
+	int indices;
+	int arr[arr_size];
+	cout << "We are going to attempt to sort an array of numbers that you will input. " << endl;
+	fill_array(arr, arr_size, indices);
+	sort_array(arr, indices);
+	return 0;
+}
+void fill_array(int array_par[], int size, int& used)
+{
+	int next,index = 0;
+	cout << "\nEnter a list of numbers to be sorted pressing enter between numbers\n"
+		<< "....terminate list by a negative number\n";
+	cin >> next;
+	while ((next >= 0) && (index < size)&&(next>=0))
+	{
+		array_par[index] = next;
+		index++;
+		cin >> next;
+	}
+	used = index;
+}
+void sort_array(int arr_par[], int used)
+{
+	//this function elects the first index and passes it to the smallest_value funtion to have
+	//its value compared to the remaining index values. 
+	int start_index;
+	for (int i = 0; i < used; i++)
+	{
+		start_index = i;
+		int index_of_minimum = min_value(arr_par, used, start_index);
+		swap_index_values(arr_par, start_index, index_of_minimum);
+	}
+	for (int i = 0; i < used; i++)
+		cout << arr_par[i] << " ";
+}
+int min_value(const int arr_par[], int used_par, int start_index)
+{
+	int next_index = start_index + 1, min_index = start_index;
+	for (int i = next_index; i < used_par; i++)
+	{
+		if (arr_par[i] < arr_par[min_index])
+			min_index = i;
+	}
+	return min_index;
+}
+void swap_index_values(int arr_par[], int index_start, int index_min)
+{
+	int temp = arr_par[index_start];
+	arr_par[index_start] = arr_par[index_min];
+	arr_par[index_min] = temp;
+
+}
