@@ -1,0 +1,60 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+void fill_array(int arr_value_par[], int& used_par);
+void graph_svg_gen(int arr_value_par[], ofstream& output_par, int used_par);
+const int SIZE = 10;
+
+int main()
+{
+	using namespace std;
+	int arr_value[SIZE],used = 0;
+	ofstream output;
+	output.open("svgOutput.svg");
+	if (output.fail())
+	{
+		cout << "Error opening output file....Exiting program";
+		exit(1);
+	}
+	fill_array(arr_value, used);
+	graph_svg_gen(arr_value, output, used);
+
+
+}
+void fill_array(int arr_value_par[], int& used_par)
+{
+	using namespace std;
+	int next;
+	cout << "Enter values between 0 and 500: ";
+	cin >> next;
+	while (next >= 0 && next <= 500 && used_par < SIZE-1)
+	{
+		arr_value_par[used_par] = next;
+		used_par++;
+		cin >> next;
+	}
+
+}
+void graph_svg_gen(int arr_value_par[], ofstream& output_par, int used_par)
+{
+	using namespace std;
+	output_par << "<?xml version=\"1.0\" standalone=\"no\"?>\n"
+		<< "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\"\n"
+		<< "\"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\n"
+		<< "<svg width=\"500\" height=\"500\"\n"
+		<< "xmlns=\"http://www.w3.org/2000/svg\">\n";
+	for (int i = 0; i < used_par; i++)
+	{
+		output_par << "\n<rect x=\"" << i * 20 << "\" y=\"20\" width=\"10\" height=\"" << arr_value_par[i] << "\"\n"
+			<< "style=\"fill:blue;\"/>\n";
+	}
+		//<< "<rect x = \"75\" y = \"100\" width = \"150\" height = \"50\"" << endl
+		//<< "style = \"fill:rgb(0,255,0);\" / >" << endl
+	output_par << "<line x1=\"0\" y1=\"20\" x2=\"300\" y2=\"20\"\n"
+		<< "style=\"stroke:purple;stroke-width:2\"/>\n"
+
+		<< "</svg>";
+
+
+}
