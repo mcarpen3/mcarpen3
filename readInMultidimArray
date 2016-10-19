@@ -1,0 +1,54 @@
+#include <iostream>
+#include <fstream>
+#include<iomanip>
+using namespace std;
+
+const int SIZE = 125;
+
+void fill_array(float arr_par[][3], ifstream& stream_par, int& index_used)
+{
+	float next;
+	
+	{
+		for (int i = 0; i < SIZE; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				if(stream_par >> next)
+				arr_par[i][j] = next;
+				
+			}
+			index_used++;
+		}
+	}
+	
+}
+
+int main()
+{
+	using namespace std;
+	ifstream input;
+	int used=0;
+	
+	float probabilities[SIZE][3];
+	input.open("LifeDeathProbability.txt");
+	
+	if (input.fail())
+	{
+		cout << "Error opening file." << endl;
+		exit(1);
+	}
+	fill_array(probabilities, input, used);
+	input.close();
+	for (int i = 0; i < used; i++)
+	{
+		int j = 0;
+		cout << setw(10) << probabilities[i][j] ;
+		{
+			for (j = 1; j < 3; j++)
+			cout << setw(10) << probabilities[i][j];
+		}
+		cout << endl;
+	}
+	return 0;
+}
