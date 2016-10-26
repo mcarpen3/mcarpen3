@@ -14,22 +14,14 @@ string ReadingStatusString(ReadingStatus rs);
 string PurchaceStatusString(PurchaseStatus ps);
 void SetBook(Book& book, string title, string author, PurchaseStatus ps, ReadingStatus rs);
 void DisplayBook(Book book);
+int GetValidInput(int min, int max,string question);
+void AddBookMenu(Book books_par[], int& book_count);
+void DisplayBookList(Book books_par[], int book_count);
+void UpdateBookMenu(Book books_par[],int book_count);
 int main()
 {
-	Book bookA, bookB, bookC, bookD, bookE, bookF;
-	SetBook(bookA, "Broke", "Glen Beck", OWNED, FINISHED);
-	SetBook(bookB, "Killing Lincoln", "Bill Oreilly", OWNED, FINISHED);
-	SetBook(bookC, "Pride and Prejudice", "Jane Austen", OWNED, FINISHED);
-	SetBook(bookD, "Masters of Doom", "David Kushner", WISHLIST, NOT_STARTED);
-	SetBook(bookE, "Problem Solving with C++", "Walter Savitch", OWNED, READING);
-	SetBook(bookF, "The Way of Serenity", "Father Jonathan Morris", OWNED, READING);
-
-	DisplayBook(bookA);
-	DisplayBook(bookB);
-	DisplayBook(bookC);
-	DisplayBook(bookD);
-	DisplayBook(bookE);
-	DisplayBook(bookF);
+	Book books[100];
+	int bookCount = 0;
 	return 0;
 }
 string ReadingStatusString(ReadingStatus rs)
@@ -65,4 +57,106 @@ void DisplayBook(Book book)
 	cout << "\nBook: " << book.title << endl
 		<< "Author: " << book.author << endl
 		<< "Status: " << PurchaceStatusString(book.purchaseStatus) << "," << ReadingStatusString(book.readingStatus) << endl;
+}
+int GetValidInput(int min, int max, string question)
+{
+	int choice;
+	cout << question;
+	cin >> choice;
+	while(choice > max || choice < min)
+	{
+		cout << "Invalid input..." << question;
+		cin >> choice;
+	}
+	cin.ignore();
+	return choice;
+	
+}
+void AddBookMenu(Book books_par[], int& book_count)
+{
+	string temp_author, temp_title;
+	int temp_ps, temp_rs;
+	cout << "Enter a book title: ";
+	getline(cin, temp_title);
+	cout << "\nEnter the author: ";
+	getline(cin, temp_author);
+	cout << "Purchase Status:" << endl;
+	cout << "\t" << OWNED << ". " << PurchaceStatusString(OWNED) << endl;
+	cout << "\t" << WISHLIST << ". " << PurchaceStatusString(WISHLIST) << endl;
+	string purchaceQuery = "Enter the purchace status: ";
+	temp_ps = GetValidInput(OWNED, WISHLIST,purchaceQuery);
+	cout << "\t" << NOT_STARTED << ". " << ReadingStatusString(NOT_STARTED) << endl;
+	cout << "\t" << NOT_STARTED << ". " << ReadingStatusString(READING) << endl;
+	cout << "\t" << FINISHED << ". " << ReadingStatusString(FINISHED) << endl;
+	temp_rs = GetValidInput(NOT_STARTED,FINISHED,purchaceQuery);
+
+	SetBook(books_par[book_count], temp_title, temp_author, (PurchaseStatus)temp_ps, (ReadingStatus)temp_rs);
+
+}
+void DisplayBookList(Book books_par[], int book_count)
+{
+	for (int i = 0; i < book_count; i++)
+	{
+		DisplayBook(books_par[i]);
+	}
+}
+void UpdateBookMenu(Book books_par[], int book_count)
+{
+	
+	string update_title, update_author;
+	PurchaseStatus update_ps;
+	ReadingStatus update_rs;
+	DisplayBookList(books_par, book_count);
+	string updateChoice = "Select the number of the book you would like to update: ";
+	int index = GetValidInput(0, book_count - 1, updateChoice);
+	update_title = books_par[index].title;
+	update_author = books_par[index].author;
+	update_ps = books_par[index].purchaseStatus;
+	update_rs = books_par[index].readingStatus;
+
+	cout << "1. Update title"
+		<< "2. Update author"
+		<< "3. Update purchace status"
+		<< "4. Update reading status" 
+		<< "5. Done"	<< endl;
+	string updateMenu = "Enter choice to update book parameter: ";
+	int updateParameter = GetValidInput(1, 5, updateMenu);
+	while(updateParameter != 5)
+	{
+		switch (updateParameter)
+		{
+		case 1:
+		{
+			cout << "Enter a new title: ";
+			getline(cin, update_title);
+			break;
+		}
+		case 2:
+		{
+			cout << "Enter a new author: ";
+			getline(cin, update_author);
+			break;
+		}
+		case 3:
+		{
+			cout << "\t" << OWNED << ". " << PurchaceStatusString(OWNED) << endl;
+			cout << "\t" << WISHLIST << ". " << PurchaceStatusString(WISHLIST) << endl;
+			string psQuery = "Enter a new purchace status: ";
+			int update_ps = GetValidInput(OWNED, WISHLIST, psQuery);
+			break;
+		}
+		case 4:
+		{
+			cout << "\t" << NOT_STARTED << ". " << ReadingStatusString(NOT_STARTED) << endl;
+			cout << "\t" << NOT_STARTED << ". " << ReadingStatusString(READING) << endl;
+			cout << "\t" << FINISHED << ". " << ReadingStatusString(FINISHED) << endl;
+			string rsQuery = "Enter a new reading status: ";
+			int update_rs = GetValidInput(NOT_STARTED, FINISHED, rsQuery);
+			break;
+		}
+		}
+
+	}
+	SetBook(books_par[index], update_title, update_author, (PurchaseStatus)update_ps, (ReadingStatus)update_rs);
+	
 }
