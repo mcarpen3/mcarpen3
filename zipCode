@@ -1,0 +1,99 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class zipcode
+{public:
+	zipcode(int m_zip_code);
+	zipcode(string m_zip_string);
+	void get_zip();
+private:
+	void build_zip(int m_next);
+	string check_valid(string m_zip_string);
+	void divide(string m_zip_string);
+	int int_array(string m_sub);
+	string valid_code;
+	int start = 0;
+	string zip;
+
+};
+int main()
+{
+	zipcode z1("101110011001100001100001001");
+	z1.get_zip();
+	return 0;
+}
+void zipcode::divide(string m_zip_string)
+{
+	string valid_code = check_valid(m_zip_string);
+	for (int i = start; start < 21;i++)
+	{
+		string sub_string = valid_code.substr(start, 5);
+		
+		start += 5;
+		int next = int_array(sub_string);
+		build_zip(next);
+	}
+}
+string zipcode::check_valid(string m_zip_string)
+{
+	if (m_zip_string.size() != 27 || m_zip_string[0] != '1' || m_zip_string[26] != '1')
+	{
+		cout << "invalid bar code";
+		exit(1);
+	}
+	return m_zip_string.substr(1, 25);
+}
+zipcode::zipcode(string m_zip_string)
+{
+
+	divide(m_zip_string);
+}
+int zipcode::int_array(string m_sub)
+{
+	int sum=0, test_sum = 0;
+	int zip_array[5];
+	int multi_arr[2][5];
+	int std_arr[5] = { 7,4,2,1,0 };
+	for (int i = 0; i < 5; i++)
+	{
+		multi_arr[0][i] = stoi(m_sub.substr(i, 1));
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		test_sum += multi_arr[0][i];
+		
+	}
+	if (test_sum > 2)
+	{
+		cout << "invalid zipcode. Exiting..." << endl;
+		exit(1);
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		multi_arr[1][i] = std_arr[i];
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		zip_array[i] = multi_arr[0][i] * multi_arr[1][i];
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		sum += zip_array[i];
+		
+	}
+	if (sum == 11)
+		sum = 0;
+	return sum;
+}
+void zipcode::build_zip(int m_next)
+{
+	string temp;
+	temp = to_string(m_next);
+	zip += temp;
+
+}
+void zipcode::get_zip()
+{
+	cout << zip;
+}
